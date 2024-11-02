@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import Image from "next/image";
 import NextLink from "next/link";
 import axios from "axios";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { usePaginationComponent } from "@/components";
 
 export default function Home() {
@@ -14,16 +14,19 @@ export default function Home() {
     data: comics,
     isLoading,
     refetch,
-  } = useQuery(["getComics"], async () => {
-    return (
-      await axios.get("http://gateway.marvel.com/v1/public/comics", {
-        params: {
-          apikey: publicKey,
-          limit: 16,
-          offset: (currentPage || 1) * 16 - 16,
-        },
-      })
-    ).data.data;
+  } = useQuery({
+    queryKey: ["getComics"],
+    queryFn: async () => {
+      return (
+        await axios.get("http://gateway.marvel.com/v1/public/comics", {
+          params: {
+            apikey: publicKey,
+            limit: 16,
+            offset: (currentPage || 1) * 16 - 16,
+          },
+        })
+      ).data.data;
+    },
   });
 
   const { totalPages, PaginationComponent, currentPage } =

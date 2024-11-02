@@ -1,17 +1,11 @@
-"use client"
+"use client";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import {
-  QueryClient,
-  QueryClientProvider,
-} from "react-query"
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-
-const queryClient = new QueryClient()
+const queryClient = new QueryClient();
 
 const inter = Inter({ subsets: ["latin"] });
-
-
 
 export default function RootLayout({
   children,

@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { useSearchParams } from "next/navigation";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
 export default function Comics() {
@@ -19,11 +19,14 @@ export default function Comics() {
     data: comics,
     isLoading,
     refetch,
-  } = useQuery(["getFilms"], async () => {
-    return await axios.get(
-      "https://api.themoviedb.org/3/movie/top_rated?language=en-US&page=1",
-      options
-    );
+  } = useQuery({
+    queryKey: ["getFilms"],
+    queryFn: async () => {
+      return await axios.get(
+        "https://api.themoviedb.org/3/movie/top_rated?language=en-US&page=1",
+        options
+      );
+    },
   });
 
   return (
