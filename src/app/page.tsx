@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect } from "react";
-import Image from "next/image";
+import NextImage from "next/image";
 import NextLink from "next/link";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
@@ -27,6 +27,7 @@ export default function Home() {
         })
       ).data.data;
     },
+    refetchOnWindowFocus: false,
   });
 
   const { totalPages, PaginationComponent, currentPage } =
@@ -40,19 +41,15 @@ export default function Home() {
   }, [currentPage]);
 
   return (
-    <main
-      style={{
-        minHeight: "100vh",
-      }}
-    >
+    <main className="min-h-screen">
       <div className="max-w-5xl my-10 mx-auto bg-white p-4 rounded-lg">
         <div className="grid grid-cols-4 gap-y-8">
           {comics?.results.map((comic: any, index: number) => (
             <div key={index} className="flex justify-center">
-              <NextLink href={"/comics?id=5"}>
+              <NextLink href={`/comics?id=${comic.id}`}>
                 <div className="bg-gray-200 rounded-md p-5">
                   <div className="flex justify-between h-full flex-col">
-                    <Image
+                    <NextImage
                       alt="comic"
                       src={`${comic.thumbnail.path}.${comic.thumbnail.extension}`}
                       width={180}
