@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import NextImage from "next/image";
+import NextLink from "next/link";
 import dayjs from "dayjs";
 import { LoadingIcon } from "@/components";
 import { ChevronIcon } from "@/components/ChevronIcon/ChevronIcon";
@@ -58,12 +59,12 @@ export default function Character({ params }: { params: { id: string } }) {
             },
           }
         )
-      ).data.data.results[0];
+      ).data.data.results;
     },
     refetchOnWindowFocus: false,
   });
 
-  console.log(character);
+  console.log(characterComics);
 
   return (
     <div className="min-h-screen">
@@ -99,12 +100,43 @@ export default function Character({ params }: { params: { id: string } }) {
                   height={300}
                 />
               </div>
-              <div>
+              <div className="w-full">
                 {!!character.description && (
                   <div className="flex flex-col">
                     <div className="text-lg font-semibold">Description</div>
                     <div className="text-lg font-medium mb-5">
                       {character.description}
+                    </div>
+                  </div>
+                )}
+                {!!characterComics && !!characterComics.length && (
+                  <div className="flex flex-col min-w-full">
+                    <div className="flex-lg font-semibold mb-3">
+                      This character appears in the following comics:
+                    </div>
+                    <div className="grid grid-cols-4 gap-3">
+                      {characterComics.map((comic: any) => {
+                        return (
+                          <div
+                            className="flex flex-col items-center justify-start"
+                            key={comic.id}
+                          >
+                            <NextLink href={`/comics?id=${comic.id}`}>
+                              <div className="flex flex-col items-center justify-center gap-2">
+                                <NextImage
+                                  src={`${comic.thumbnail.path}.${comic.thumbnail.extension}`}
+                                  alt={comic.name}
+                                  width={100}
+                                  height={100}
+                                />
+                                <p className="text-center text-xs font-semibold">
+                                  {comic.title}
+                                </p>
+                              </div>
+                            </NextLink>
+                          </div>
+                        );
+                      })}
                     </div>
                   </div>
                 )}

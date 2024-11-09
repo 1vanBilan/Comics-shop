@@ -1,9 +1,10 @@
 "use client";
 import React from "react";
+import NextImage from "next/image";
+import NextLink from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import NextImage from "next/image";
 import dayjs from "dayjs";
 import { LoadingIcon } from "@/components";
 import { ChevronIcon } from "@/components/ChevronIcon/ChevronIcon";
@@ -121,20 +122,26 @@ export default function Comics() {
                       <p className="font-semibold text-lg mt-3">
                         Related Characters
                       </p>
-                      <div className="grid grid-cols-3">
+                      <div className="grid grid-cols-4 gap-3">
                         {characters.map((character: any) => {
                           return (
                             <div
+                              className="flex flex-col items-center justify-start"
                               key={character.id}
-                              className="flex flex-col items-center justify-center"
                             >
-                              <NextImage
-                                src={`${character.thumbnail.path}.${character.thumbnail.extension}`}
-                                alt={character.name}
-                                width={100}
-                                height={100}
-                              />
-                              <p className="text-center">{character.name}</p>
+                              <NextLink href={`/characters/${character.id}`}>
+                                <div className="flex flex-col items-center justify-center gap-2">
+                                  <NextImage
+                                    src={`${character.thumbnail.path}.${character.thumbnail.extension}`}
+                                    alt={character.name}
+                                    width={100}
+                                    height={100}
+                                  />
+                                  <p className="text-center text-xs font-semibold">
+                                    {character.name}
+                                  </p>
+                                </div>
+                              </NextLink>
                             </div>
                           );
                         })}
