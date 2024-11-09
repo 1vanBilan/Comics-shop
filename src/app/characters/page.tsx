@@ -11,16 +11,16 @@ export default function Home() {
   const privateKey = "5e97a7a01eeedec799448a823183b212cb037a7c";
 
   const {
-    data: comics,
+    data: characters,
     isLoading,
     isRefetching,
     isSuccess,
     refetch,
   } = useQuery({
-    queryKey: ["getComics"],
+    queryKey: ["getCharacters"],
     queryFn: async () => {
       return (
-        await axios.get("http://gateway.marvel.com/v1/public/comics", {
+        await axios.get("http://gateway.marvel.com/v1/public/characters", {
           params: {
             apikey: publicKey,
             limit: 16,
@@ -34,7 +34,7 @@ export default function Home() {
 
   const { totalPages, PaginationComponent, currentPage } =
     usePaginationComponent({
-      total: comics?.total,
+      total: characters?.total,
       resultsPerPage: 16,
     });
 
@@ -46,7 +46,7 @@ export default function Home() {
     <main className="container mx-auto">
       <div className="max-w-5xl my-10 mx-auto bg-white rounded-md pb-4">
         <div className="w-full h-16 flex items-center justify-center bg-red text-white rounded-t-md text-xl">
-          MARVEL Comics
+          MARVEL Characters
         </div>
         {isLoading || isRefetching ? (
           <div className="flex justify-center py-20">
@@ -56,19 +56,19 @@ export default function Home() {
           isSuccess && (
             <>
               <div className="grid grid-cols-4 gap-y-8 m-4">
-                {comics?.results.map((comic: any, index: number) => (
+                {characters?.results.map((character: any, index: number) => (
                   <div key={index} className="flex justify-center">
-                    <NextLink href={`/comics?id=${comic.id}`}>
+                    <NextLink href={`/characters/${character.id}`}>
                       <div className="bg-gray-200 rounded-md p-5">
                         <div className="flex justify-between h-full flex-col">
                           <NextImage
                             alt="comic"
-                            src={`${comic.thumbnail.path}.${comic.thumbnail.extension}`}
+                            src={`${character.thumbnail.path}.${character.thumbnail.extension}`}
                             width={180}
                             height={270}
                           />
                           <span className="font-semibold text-center mt-3 max-w-44">
-                            {comic.title}
+                            {character.name}
                           </span>
                         </div>
                       </div>

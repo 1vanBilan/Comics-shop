@@ -1,10 +1,12 @@
 "use client";
 import React from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import NextImage from "next/image";
 import dayjs from "dayjs";
+import { LoadingIcon } from "@/components";
+import { ChevronIcon } from "@/components/ChevronIcon/ChevronIcon";
 
 const getComicReleaseDate = (dates: { type: string; date: Date }[]) => {
   const onSaleDate = dates.find((date) => date.type === "onsaleDate")?.date;
@@ -16,6 +18,7 @@ const getComicReleaseDate = (dates: { type: string; date: Date }[]) => {
 
 export default function Comics() {
   const searchParams = useSearchParams();
+  const { back } = useRouter();
   const comicId = searchParams.get("id");
   const publicKey = "6d64d1eac4b584cc288684fb474d4218";
   const privateKey = "5e97a7a01eeedec799448a823183b212cb037a7c";
@@ -23,7 +26,7 @@ export default function Comics() {
   const {
     data: comic,
     isLoading,
-    refetch,
+    isSuccess,
   } = useQuery({
     queryKey: ["getComic", comicId],
     queryFn: async () => {
@@ -62,10 +65,30 @@ export default function Comics() {
 
   return (
     <div className="min-h-screen">
-      <div className="max-w-5xl my-10 mx-auto bg-white p-4 rounded-md">
-        {!!comic && (
+      <div className="max-w-5xl my-10 mx-auto bg-white rounded-md">
+        {isLoading && (
+          <div className="flex justify-center py-20">
+            <LoadingIcon width={60} height={60} />
+          </div>
+        )}
+        {isSuccess && !!comic && (
           <>
-            <div className="flex gap-8">
+            <div className="w-full h-16 flex items-center justify-center bg-red text-white rounded-t-md text-xl">
+              {comic.title}
+            </div>
+            <button
+              className="text-red mt-2 pl-4 font-semibold flex items-center gap-1"
+              onClick={() => back()}
+            >
+              <ChevronIcon
+                rotate={180}
+                color="#81001a"
+                width={13}
+                height={13}
+              />
+              Go Back
+            </button>
+            <div className="flex gap-8 p-4 pt-2">
               <div className="min-w-[300px]">
                 <NextImage
                   src={`${comic.thumbnail.path}.${comic.thumbnail.extension}`}
@@ -75,16 +98,15 @@ export default function Comics() {
                 />
               </div>
               <div>
-                <h1 className="font-semibold text-2xl">{comic.title}</h1>
                 {!!comic.textObjects[0]?.text && (
                   <div
-                    className="mt-3 text-base font-medium"
+                    className="text-base font-medium mb-5"
                     dangerouslySetInnerHTML={{
                       __html: comic.textObjects[0].text,
                     }}
                   />
                 )}
-                <div className="flex flex-col mt-5">
+                <div className="flex flex-col">
                   <p className="font-semibold text-lg">Release Date:</p>
                   <p className="text-lg">
                     {!!comic.dates.length &&
