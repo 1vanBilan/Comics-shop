@@ -59,16 +59,25 @@ export default function Home() {
                 {characters?.results.map((character: any, index: number) => (
                   <div key={index} className="flex justify-center">
                     <NextLink href={`/characters/${character.id}`}>
-                      <div className="bg-gray-200 rounded-md p-5">
-                        <div className="flex justify-between h-full flex-col">
-                          <NextImage
-                            alt="comic"
-                            src={`${character.thumbnail.path}.${character.thumbnail.extension}`}
-                            width={180}
-                            height={270}
+                      <div className="bg-gray-200 rounded-md p-5 h-full">
+                        <div className="flex justify-start h-full flex-col">
+                          <div
+                            style={{
+                              backgroundImage:
+                                character.thumbnail.path ===
+                                "http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available"
+                                  ? `url(/placeholder.jpg)`
+                                  : `url(${character.thumbnail.path}.${character.thumbnail.extension})`,
+                              backgroundSize: "cover",
+                              backgroundPosition: "center",
+                              width: "180px",
+                              height: "270px",
+                            }}
                           />
                           <span className="font-semibold text-center mt-3 max-w-44">
-                            {character.name}
+                            {character.name.length > 35
+                              ? `${character.name.slice(0, 35)}...`
+                              : character.name}
                           </span>
                         </div>
                       </div>

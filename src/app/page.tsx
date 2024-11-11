@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect } from "react";
-import NextImage from "next/image";
 import NextLink from "next/link";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
@@ -59,16 +58,25 @@ export default function Home() {
                 {comics?.results.map((comic: any, index: number) => (
                   <div key={index} className="flex justify-center">
                     <NextLink href={`/comics?id=${comic.id}`}>
-                      <div className="bg-gray-200 rounded-md p-5">
-                        <div className="flex justify-between h-full flex-col">
-                          <NextImage
-                            alt="comic"
-                            src={`${comic.thumbnail.path}.${comic.thumbnail.extension}`}
-                            width={180}
-                            height={270}
+                      <div className="bg-gray-200 rounded-md p-5 h-full">
+                        <div className="flex justify-start h-full flex-col ">
+                          <div
+                            style={{
+                              backgroundImage:
+                                comic.thumbnail.path ===
+                                "http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available"
+                                  ? `url(/placeholder.jpg)`
+                                  : `url(${comic.thumbnail.path}.${comic.thumbnail.extension})`,
+                              backgroundSize: "cover",
+                              backgroundPosition: "center",
+                              width: "180px",
+                              height: "270px",
+                            }}
                           />
                           <span className="font-semibold text-center mt-3 max-w-44">
-                            {comic.title}
+                            {comic.title.length > 35
+                              ? `${comic.title.slice(0, 35)}...`
+                              : comic.title}
                           </span>
                         </div>
                       </div>
